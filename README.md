@@ -25,12 +25,7 @@ data/ORS_2015_2017_2019.xlsx
 ```
 > The assignment instructions say not to edit shared Google files. So we make a local copy first.
 
-### 3) Run (script)
-```bash
-python scripts/run_hiv2015.py --xlsx data/ORS_2015_2017_2019.xlsx --sheet HIV2015 --out impact_score.csv
-```
-
-### 4) Run (notebook)
+### 3) Run (notebook)
 Open `notebooks/HIV_2015_impact_score.ipynb`, set `xlsx_path`, run all cells.
 It will export `impact_score.csv`.
 
