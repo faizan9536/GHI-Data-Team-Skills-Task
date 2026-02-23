@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ```
 
 ### 2) ORS workbook
-As instructed in the assignment, use a **local copy** of the ORS workbook (do not edit shared Google files).
+As instructed in the assignment, use a **local copy** of the ORS workbook.
 
 ### 3) Run the notebook
 Open **`HIV_2015_impact_score_refined.ipynb`**, then set:
