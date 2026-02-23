@@ -1,46 +1,73 @@
 # GHI Data Team Skills Task — HIV 2015 Impact Score
 
-This repo reproduces the **HIV 2015 ORS Impact Score** calculation in Python and exports the required `impact_score.csv`.
+This repository contains a single Jupyter notebook that reproduces the HIV 2015 ORS Impact Score calculation in Python and exports the required `impact_score.csv`.
 
-## What’s included
-- `notebooks/HIV_2015_impact_score.ipynb` — end-to-end, **validated** notebook (Excel-matching).
-- `scripts/run_hiv2015.py` — command-line script that generates `impact_score.csv` without Jupyter.
-- `requirements.txt` — minimal dependencies.
-- (Output) `impact_score.csv` — generated after running the notebook or the script.
+The workflow follows the structure outlined in the HIV 2013 reference notebook and the Entity Map guide, and implements the formula described in the ORS supporting documentation.
 
-## Quickstart
+---
 
-### 1) Create environment
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-source .venv/bin/activate
-pip install -r requirements.txt
+## File Included
+
+`HIV_2015_impact_score.ipynb`
+
+This notebook performs the complete workflow:
+
+- Loads the HIV 2015 ORS sheet as a raw Excel grid  
+- Constructs a header-anchored entity map  
+- Extracts all required country-level inputs  
+- Computes Impact Score for each country × each drug  
+- Validates computed values against the Excel sheet  
+- Exports `impact_score.csv`  
+
+---
+
+## How to Run
+
+1. Make a local copy of the ORS workbook (as instructed in the assignment).  
+2. Open `HIV_2015_impact_score.ipynb`.  
+3. Set the following variables inside the notebook:
+
+```python
+xlsx_path = "path/to/your/local/ORS_file.xlsx"
+sheet_name = "HIV2015"
 ```
 
-### 2) Place the ORS workbook
-Put the workbook here (recommended):
-```
-data/ORS_2015_2017_2019.xlsx
-```
-> The assignment instructions say not to edit shared Google files. So we make a local copy first.
+4. Run all cells.  
+5. The notebook will generate `impact_score.csv`.
 
-### 3) Run (notebook)
-Open `notebooks/HIV_2015_impact_score.ipynb`, set `xlsx_path`, run all cells.
-It will export `impact_score.csv`.
+---
 
-## Method summary 
-The HIV impact model computes DALYs averted by each drug by:
-1. Splitting treatment into quadrants (adult/child × first/second line) using regimen tables.
-2. Summing contributions from regimens that include a given drug.
-3. Normalizing by retention rate (effective treatment length) as described in the supporting info documentation.
+## Model Overview
 
-The implementation here is **header-anchored** (entity map style) so that every term can be traced back to the ORS sheet.
+For each country and each drug present in the HIV 2015 ORS sheet:
 
-## Notes / assumptions
-- The sheet is loaded as a raw grid (`header=None`) to mirror Excel’s layout.
-- Percent-like cells are normalized to fractions (e.g., `72` → `0.72`) where needed.
-- Where the ORS provides a regimen-size/denominator column, it is used; otherwise regimen size is inferred from the regimen string.
+1. Treatment is divided into four components:
+   - Adult first-line
+   - Adult second-line
+   - Child first-line
+   - Child second-line
 
-## Reproducibility
-This code was validated by directly comparing per-country, per-drug values vs Excel columns, with max absolute differences on the order of ~1e-6 (floating tolerance).
+2. For each regimen containing a given drug:
+   - The contribution to DALYs averted is computed using the ORS model formula.
+   - Coverage, regimen share, efficacy, and DALYs are incorporated.
+   - The model adjustment term is applied.
+
+3. The total is normalized using the retention-rate adjustment described in the ORS supporting documentation.
+
+This produces an Impact Score for every Country × Drug combination.
+
+---
+
+## Implementation Notes
+
+- The sheet is loaded using `header=None` to preserve the original ORS layout.
+- The implementation is header-anchored (entity-map style), so all inputs are referenced using stable column labels or anchored cell positions rather than fragile positional assumptions.
+- Percentage-like values are normalized to fractional form where required.
+
+---
+
+## Validation
+
+Computed Impact Scores were validated against the Excel ORS sheet by comparing per-country and per-drug outputs.
+
+Maximum absolute differences are on the order of ~1e-6, reflecting floating-point precision only.
