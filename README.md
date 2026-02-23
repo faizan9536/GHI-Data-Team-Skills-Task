@@ -23,7 +23,7 @@ Put the workbook here (recommended):
 ```
 data/ORS_2015_2017_2019.xlsx
 ```
-> The assignment instructions say not to edit shared Google files. Make a local copy first.
+> The assignment instructions say not to edit shared Google files. So we make a local copy first.
 
 ### 3) Run (script)
 ```bash
